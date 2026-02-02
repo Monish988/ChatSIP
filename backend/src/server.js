@@ -3,7 +3,7 @@ import { ENV } from "./lib/env.js";
 import authRouter from "./routes/auth.route.js";
 import messagesRouter from "./routes/messages.route.js";
 import path from "path";
-
+import connectDB from "./lib/db.js";
 const __dirname = path.resolve();
 const app = express();
 
@@ -23,6 +23,7 @@ if(ENV.NODE_ENV==='production'){
 }
 
 async function startServer() {
+  connectDB();
   app.listen(ENV.PORT, () => {
     console.log("Server Started Successfully");
   });
