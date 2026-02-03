@@ -6,5 +6,9 @@ export const ENV = {
     PORT:process.env.PORT ||3000,
     DB_URL:process.env.DB_URL,
     NODE_ENV:process.env.NODE_ENV ||'development',
-    JWT_SECRET:process.env.JWT_SECRET
+    JWT_SECRET:process.env.JWT_SECRET,
+    RESEND_API_KEY:process.env.RESEND_API_KEY,
+    EMAIL_FROM:process.env.EMAIL_FROM,
+    EMAIL_FROM_NAME:process.EMAIL_FROM_NAME,
+    CLIENT_URL:process.env.CLIENT_URL
 }
