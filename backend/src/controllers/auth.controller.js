@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import generateToken from "../lib/utils.js";
 import { sendWelcomeEmail } from "../emails/emailHandler.js";
 import { ENV } from "../lib/env.js";
+import cloudinary from "../lib/cloudinary.js";
 
 export const signup = async (req, res) => {
   const { fullname, email, password } = req.body;
@@ -84,6 +85,29 @@ export const login = async(req,res)=>{
 export const logout = (_,res)=>{
   res.cookie('jwt','',{maxAge:0});
   res.status(200).json({message:'Logout Successfully'})
+}
+
+
+export const update = async(req,res)=>{
+  const {profilePic} = req.body;
+  if(!profilePic){
+    return res.status(400).json({message:"Profile Picture is required"});
+  }
+
+  try{
+    const userId = req.user._id;
+    const uploadResponse  = await cloudinary.uploader.upload(profilePic);
+
+    const updatedUser = await User.findByIdAndUpdate(userId,{profilePic:uploadResponse.secure_url},{new:true});
+    
+
+    return res.status(200).json({message:"Profile Updated Successfully",user:updatedUser});
+
+  }
+  catch(err){
+    console.error("Error in Update Profile Controller:",err);
+    return res.status(500).json({message:"Internal Server Error"});
+  }
 }
 
 
