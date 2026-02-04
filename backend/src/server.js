@@ -1,6 +1,7 @@
 import express from "express";
 import { ENV } from "./lib/env.js";
 import authRouter from "./routes/auth.route.js";
+import cookieParser from "cookie-parser";
 import messagesRouter from "./routes/messages.route.js";
 import path from "path";
 import connectDB from "./lib/db.js";
@@ -9,6 +10,7 @@ const app = express();
 
 
 app.use(express.json());
+app.use(cookieParser());
 app.use('/api/auth',authRouter);
 app.use('/api/messages',messagesRouter);
 
