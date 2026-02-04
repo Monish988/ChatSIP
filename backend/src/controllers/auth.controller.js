@@ -4,7 +4,7 @@ import generateToken from "../lib/utils.js";
 import { sendWelcomeEmail } from "../emails/emailHandler.js";
 import { ENV } from "../lib/env.js";
 
-const signup = async (req, res) => {
+export const signup = async (req, res) => {
   const { fullname, email, password } = req.body;
   try {
     if (!fullname || !email || !password) {
@@ -57,4 +57,34 @@ const signup = async (req, res) => {
   res.send("Signup Route");
 };
 
-export default signup;
+export const login = async(req,res)=>{
+  const {email,password} = req.body;
+  try{
+
+    const user = await User.findOne({email:email});
+    if(!user){
+      return res.status(400).json({message:"Invalid Credentials"});
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(password,user.password);
+    if(!isPasswordCorrect){
+      return res.status(400).json({message:"Invalid Credentials"});
+    }
+    generateToken(user._id,res);
+    return res.status(200).json({message:"Login Successful",user:user});
+
+  }
+  catch(err){
+    console.log("Error in Login Controller: ",err);
+    return res.status(500).json({message:"Internal Server Error"});
+  }
+}
+
+
+export const logout = (_,res)=>{
+  res.cookie('jwt','',{maxAge:0});
+  res.status(200).json({message:'Logout Successfully'})
+}
+
+
+
