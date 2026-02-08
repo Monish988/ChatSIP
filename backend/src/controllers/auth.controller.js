@@ -47,7 +47,12 @@ export const signup = async (req, res) => {
       } catch (err) {}
       return res
         .status(201)
-        .json({ message: "User created successfully", user: newUser });
+        .json({
+          _id:newUser._id,
+          fullname:newUser.fullname,
+          email:newUser.fullname,
+          profilePic:newUser.profilePic
+        });
     } else {
       return res.status(500).json({ message: "Failed to create user" });
     }
