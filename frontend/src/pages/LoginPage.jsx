@@ -1,24 +1,24 @@
-import React from "react";
-import { useState } from "react";
-import { useAuthStore } from "../store/useAuthStore";
+import React from 'react'
+import { useState } from 'react';
+import { useAuthStore } from '../store/useAuthStore';
 import AnimatedBorderContainer from "../components/AnimatedBorderContainer";
 
 import { MailIcon,LockIcon,MessageCircleIcon,UserIcon } from "lucide-react";
-import LoaderComp from "../components/LoaderComp";
 import {Link} from "react-router-dom"
+import LoaderComp from '../components/LoaderComp';
 
-const SignUpPage = () => {
+const LoginPage = () => {
+
   const [formData, setFormData] = useState({
-    fullname: "",
-    email: "",
-    password: "",
-  });
-  const { signUp, isSigningUp } = useAuthStore();
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    signUp(formData)
-  };
-  console.log(formData);
+      email: "",
+      password: "",
+    });
+    const { login, isLoggingIn } = useAuthStore();
+    const handleSubmit = (e) => {
+      e.preventDefault()
+      login(formData)
+    };
+
   return (
        <div className="w-full flex items-center justify-center p-4 bg-slate-900">
       <div className="relative  max-w-6xl md:h-[800px] h-[650px]">
@@ -30,27 +30,12 @@ const SignUpPage = () => {
                 {/* HEADING TEXT */}
                 <div className="text-center mb-8">
                   <MessageCircleIcon className="w-12 h-12 mx-auto text-slate-400 mb-4" />
-                  <h2 className="text-2xl font-bold text-slate-200 mb-2">Create Account</h2>
-                  <p className="text-slate-400">Sign up for a new account</p>
+                  <h2 className="text-2xl font-bold text-slate-200 mb-2">Welcome Back !</h2>
+                  <p className="text-slate-400">Login to access your account</p>
                 </div>
 
                 {/* FORM */}
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* FULL NAME */}
-                  <div>
-                    <label className="auth-input-label">Full Name</label>
-                    <div className="relative">
-                      <UserIcon className="auth-input-icon" />
-
-                      <input
-                        type="text"
-                        value={formData.fullname}
-                        onChange={(e) => setFormData({ ...formData, fullname: e.target.value })}
-                        className="input"
-                        placeholder="John Doe"
-                      />
-                    </div>
-                  </div>
 
                   {/* EMAIL INPUT */}
                   <div>
@@ -85,18 +70,18 @@ const SignUpPage = () => {
                   </div>
 
                   {/* SUBMIT BUTTON */}
-                  <button className="auth-btn" type="submit" disabled={isSigningUp}>
-                    {isSigningUp ? (
+                  <button className="auth-btn" type="submit" disabled={isLoggingIn}>
+                    {isLoggingIn ? (
                       <LoaderComp className="w-full h-5 animate-spin text-center" />
                     ) : (
-                      "Create Account"
+                      "Sign In"
                     )}
                   </button>
                 </form>
 
                 <div className="mt-6 text-center">
-                  <Link to="/login" className="auth-link">
-                    Already have an account? Login
+                  <Link to="/signup" className="auth-link">
+                    Don't have an account? Create one
                   </Link>
                 </div>
               </div>
@@ -111,7 +96,7 @@ const SignUpPage = () => {
                   className="w-full h-auto object-contain"
                 />
                 <div className="mt-6 text-center">
-                  <h3 className="text-xl font-medium text-cyan-400">Start Your Journey Today</h3>
+                  <h3 className="text-xl font-medium text-cyan-400">Connect anytime, anywhere</h3>
 
                   <div className="mt-4 flex justify-center gap-4">
                     <span className="auth-badge">Free</span>
@@ -126,6 +111,6 @@ const SignUpPage = () => {
       </div>
     </div>
   );
-};
+}
 
-export default SignUpPage;
+export default LoginPage
