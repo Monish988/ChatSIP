@@ -5,13 +5,13 @@ import AnimatedBorderContainer from "../components/AnimatedBorderContainer";
 
 import { MailIcon,LockIcon,MessageCircleIcon,UserIcon } from "lucide-react";
 import {Link} from "react-router-dom"
-import LoaderComp from '../components/LoaderComp';
+import { LoaderIcon } from 'lucide-react';
 
 const LoginPage = () => {
 
   const [formData, setFormData] = useState({
       email: "",
-      password: "",
+      password: "", 
     });
     const { login, isLoggingIn } = useAuthStore();
     const handleSubmit = (e) => {
@@ -72,7 +72,7 @@ const LoginPage = () => {
                   {/* SUBMIT BUTTON */}
                   <button className="auth-btn" type="submit" disabled={isLoggingIn}>
                     {isLoggingIn ? (
-                      <LoaderComp className="w-full h-5 animate-spin text-center" />
+                      <LoaderIcon className="w-full h-5 animate-spin text-center" />
                     ) : (
                       "Sign In"
                     )}
