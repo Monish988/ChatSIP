@@ -4,8 +4,8 @@ import { useAuthStore } from "../store/useAuthStore";
 import AnimatedBorderContainer from "../components/AnimatedBorderContainer";
 
 import { MailIcon,LockIcon,MessageCircleIcon,UserIcon } from "lucide-react";
-import LoaderComp from "../components/LoaderComp";
 import {Link} from "react-router-dom"
+import { LoaderIcon } from "lucide-react";
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
@@ -87,7 +87,7 @@ const SignUpPage = () => {
                   {/* SUBMIT BUTTON */}
                   <button className="auth-btn" type="submit" disabled={isSigningUp}>
                     {isSigningUp ? (
-                      <LoaderComp className="w-full h-5 animate-spin text-center" />
+                      <LoaderIcon/>
                     ) : (
                       "Create Account"
                     )}
