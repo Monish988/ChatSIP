@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import LoginUpPage from "./pages/LoginUpPage";
+import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import ChatsPage from "./pages/ChatsPage";
 import { useAuthStore } from "./store/useAuthStore";
@@ -26,7 +26,7 @@ const App = () => {
       <div className="absolute bottom-0 -right-4 size-96 bg-lime-500 opacity-20 blur-[100px]" />
       <Routes>
         <Route path="/" element={ authUser? <ChatsPage />: <Navigate to="/login" />} />
-        <Route path="/login" element={authUser? <Navigate to="/" /> : <LoginUpPage />} />
+        <Route path="/login" element={authUser? <Navigate to="/" /> : <LoginPage />} />
         <Route path="/signup" element={authUser? <Navigate to="/" /> :  <SignUpPage />} />
       </Routes>
       <Toaster/>
