@@ -3,7 +3,8 @@ import {
   getAllContacts,
   getUserChats,
   sendMessage,
-  getChatPartners
+  getChatPartners,
+  reactToMessage,
 } from "../controllers/message.controller.js";
 import { protectRoute } from "../middleware/auth.middleware.js";
 import { arcJetProtection } from "../middleware/arcjet.middleware.js";
@@ -13,6 +14,7 @@ router.use(protectRoute);
 router.get("/contacts",getAllContacts);
 
 router.get("/chats",getChatPartners);
+router.patch("/reaction/:messageId", reactToMessage);
 
 router.get("/:id",  getUserChats);
 

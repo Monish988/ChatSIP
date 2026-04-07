@@ -6,7 +6,7 @@ import { ENV } from "../lib/env.js";
 import cloudinary from "../lib/cloudinary.js";
 
 export const signup = async (req, res) => {
-  const { fullname, email, password } = req.body;
+  const { fullname, email, password, username } = req.body;
   try {
     if (!fullname || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
@@ -18,11 +18,14 @@ export const signup = async (req, res) => {
         .json({ message: "Password must be at least 6 characters long" });
     }
 
-    if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email)) {
+    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedUsername = (username || normalizedEmail.split("@")[0]).trim().toLowerCase();
+
+    if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(normalizedEmail)) {
       return res.status(400).json({ message: "Invalid email address" });
     }
 
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email: normalizedEmail });
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -34,8 +37,9 @@ export const signup = async (req, res) => {
     }
 
     const newUser = new User({
-      fullname,
-      email,
+      fullname: fullname.trim(),
+      username: normalizedUsername,
+      email: normalizedEmail,
       password: hashedPassword,
     });
 
@@ -43,12 +47,13 @@ export const signup = async (req, res) => {
       await newUser.save();
       generateToken(newUser._id, res);
       try {
-        sendWelcomeEmail(email, fullname, ENV.CLIENT_URL);
+        sendWelcomeEmail(normalizedEmail, newUser.fullname, ENV.CLIENT_URL);
       } catch (err) {}
       return res.status(201).json({
         _id: newUser._id,
         fullname: newUser.fullname,
-        email: newUser.fullname,
+        username: newUser.username,
+        email: newUser.email,
         profilePic: newUser.profilePic,
       });
     } else {
@@ -56,6 +61,9 @@ export const signup = async (req, res) => {
     }
   } catch (err) {
     console.error("Error in Signup Controller:", err);
+    if (err?.code === 11000) {
+      return res.status(400).json({ message: "Email or username already exists" });
+    }
     return res.status(500).json({ message: "Internal server error" });
   }
   res.send("Signup Route");
@@ -64,12 +72,16 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email: email });
+    const normalizedEmail = email?.trim().toLowerCase();
+    const normalizedPassword = password?.trim();
+    const escapedEmail = normalizedEmail.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+    const user = await User.findOne({ email: { $regex: `^${escapedEmail}$`, $options: "i" } });
     if (!user) {
       return res.status(400).json({ message: "Invalid Credentials" });
     }
 
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    const isPasswordCorrect = await bcrypt.compare(normalizedPassword, user.password);
     if (!isPasswordCorrect) {
       return res.status(400).json({ message: "Invalid Credentials" });
     }
@@ -77,6 +89,7 @@ export const login = async (req, res) => {
     return res.status(200).json({
       _id: user._id,
       fullname: user.fullname,
+      username: user.username,
       email: user.email,
       profilePic: user.profilePic,
     });

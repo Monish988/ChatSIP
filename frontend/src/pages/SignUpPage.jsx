@@ -10,6 +10,7 @@ import { LoaderIcon } from "lucide-react";
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
     fullname: "",
+    username: "",
     email: "",
     password: "",
   });
@@ -48,6 +49,22 @@ const SignUpPage = () => {
                         onChange={(e) => setFormData({ ...formData, fullname: e.target.value })}
                         className="input"
                         placeholder="John Doe"
+                      />
+                    </div>
+                  </div>
+
+                  {/* EMAIL INPUT */}
+                  <div>
+                    <label className="auth-input-label">Username</label>
+                    <div className="relative">
+                      <UserIcon className="auth-input-icon" />
+
+                      <input
+                        type="text"
+                        value={formData.username}
+                        onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                        className="input"
+                        placeholder="johndoe"
                       />
                     </div>
                   </div>

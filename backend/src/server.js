@@ -6,13 +6,39 @@ import messagesRouter from "./routes/messages.route.js";
 import path from "path";
 import connectDB from "./lib/db.js";
 import cors from "cors"
+import http from "http";
+import { initSocket } from "./lib/socket.js";
 const __dirname = path.resolve();
 const app = express();
+const server = http.createServer(app);
+
+const allowedOrigins = [
+  ENV.CLIENT_URL,
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "http://localhost:3000",
+]
+  .filter(Boolean)
+  .flatMap((origin) => origin.split(",").map((item) => item.trim()))
+  .filter(Boolean);
+
+const corsOptions = {
+  origin(origin, callback) {
+    const isLocalhost = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin || "");
+
+    if (!origin || allowedOrigins.includes(origin) || isLocalhost) {
+      return callback(null, true);
+    }
+    return callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+};
 
 
-app.use(express.json());
+app.use(express.json({ limit: "12mb" }));
+app.use(express.urlencoded({ extended: true, limit: "12mb" }));
 app.use(cookieParser());
-app.use(cors({origin:ENV.CLIENT_URL,credentials:true}))
+app.use(cors(corsOptions));
 app.use('/api/auth',authRouter);
 app.use('/api/messages',messagesRouter);
 
@@ -28,8 +54,9 @@ if(ENV.NODE_ENV==='production'){
 }
 
 async function startServer() {
-  connectDB();
-  app.listen(ENV.PORT, () => {
+  await connectDB();
+  initSocket(server, corsOptions);
+  server.listen(ENV.PORT, () => {
     console.log("Server Started Successfully");
   });
 }

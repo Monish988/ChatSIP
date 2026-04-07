@@ -1,8 +1,8 @@
 import React from 'react'
 
-const AnimatedBorderContainer = ({children}) => {
+const AnimatedBorderContainer = ({children, className = ""}) => {
   return (
-    <div className='"w-full  [background:linear-gradient(45deg,#172033,theme(colors.slate.800)_50%,#172033)_padding-box,conic-gradient(from_var(--border-angle),theme(colors.slate.600/.48)_80%,_theme(colors.indigo.500)_86%,_theme(colors.indigo.300)_90%,_theme(colors.indigo.500)_94%,_theme(colors.slate.600/.48))_border-box] rounded-2xl border border-transparent animate-border'>
+    <div className={`w-full rounded-2xl border border-transparent bg-[linear-gradient(45deg,#172033,#1e293b_50%,#172033)_padding-box,conic-gradient(from_var(--border-angle),#4755697a_80%,#6366f1_86%,#a5b4fc_90%,#6366f1_94%,#4755697a)_border-box] animate-border ${className}`}>
         {children}
     </div>
   )
