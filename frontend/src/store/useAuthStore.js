@@ -19,7 +19,7 @@ export const useAuthStore = create((set) => ({
       set({ authUser: res.data });
       toast.success("Account Created Successfully!");
     } catch (err) {
-      console.log("Error in Signing up.. ", err);
+
       toast.error(err.response?.data?.message || "Signup failed");
     } finally {
       set({ isSigningUp: false });
@@ -38,7 +38,7 @@ export const useAuthStore = create((set) => ({
       toast.success("Logged in successfully!");
 
     } catch (err) {
-      console.log("Error in Signing up.. ", err);
+
      toast.error(err.response?.data?.message || "Login failed");
     } finally {
       set({ isLoggingIn: false });
@@ -59,7 +59,7 @@ export const useAuthStore = create((set) => ({
       const res = await axiosInstance.get("/auth/check-auth");
       set({ authUser: res.data, isCheckingAuth:false });
     } catch (err) {
-      console.log("Error checking auth", err);
+
       set({ authUser: null, isCheckingAuth: false });
     }
   },

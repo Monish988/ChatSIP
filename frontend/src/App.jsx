@@ -14,7 +14,7 @@ const App = () => {
   useEffect(()=>{
     checkAuth();
   },[checkAuth])
-  console.log(authUser,isCheckingAuth)
+
   if(isCheckingAuth){
     return <LoaderComp />
   }

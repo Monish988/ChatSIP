@@ -41,7 +41,7 @@ export const useChatStore = create((set, get) => ({
       const res = await axiosInstance.get("/messages/contacts");
       set({ allContacts: res.data.users || [] });
     } catch (err) {
-      console.log("ER", err);
+
       toast.error(err.response?.data?.message || "Failed to fetch contacts");
     } finally {
       set({ isUsersLoading: false });
