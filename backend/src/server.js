@@ -53,11 +53,16 @@ if(ENV.NODE_ENV==='production'){
     })
 }
 
-async function startServer() {
-  await connectDB();
-  initSocket(server, corsOptions);
-  server.listen(ENV.PORT, () => {
-    console.log("Server Started Successfully");
-  });
+// Only start the server if this file is run directly (not imported as a module)
+if (import.meta.url === `file://${path.resolve(process.argv[1])}`) {
+  async function startServer() {
+    await connectDB();
+    initSocket(server, corsOptions);
+    server.listen(ENV.PORT, () => {
+      console.log("Server Started Successfully on port", ENV.PORT);
+    });
+  }
+  startServer();
 }
-startServer();
+
+export default app;
